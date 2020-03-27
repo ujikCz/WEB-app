@@ -1,0 +1,57 @@
+.sticker {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 80%;
+}
+
+.container {
+  padding: 1px 16px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.pad{
+  padding: 1px 16px;
+}
+
+.group{
+  width:100%;
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+@media only screen and (max-width: 600px) {
+  .group{
+    width:100%;
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap:10px;
+  }
+}
+@media only screen and (max-width: 400px) {
+  .group{
+    width:100%;
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap:10px;
+  }
+}
+
+/* COLORS */
+
+.blue{
+  background-color:CornflowerBlue;
+}
+.yellow{
+  background-color:yellow;
+}
+.green{
+  background-color:Chartreuse;
+}
+.red{
+  background-color:Crimson;
+}
+.violet{
+  background-color:DarkOrchid;
+}
+.pink{
+  background-color:DeepPink;
+}
