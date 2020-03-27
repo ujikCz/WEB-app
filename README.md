@@ -1,3 +1,4 @@
 # ludvik.prokopec-gmail.com
 WEB APP
-- Prokopec Ludvík - uprávy: odebrání zobrazení data-id
+- Prokopec Ludvík - úpravy: odebrání zobrazení data-id
+- dodělat drag&drop
