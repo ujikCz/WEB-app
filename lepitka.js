@@ -2,8 +2,8 @@ window.addEventListener('DOMContentLoaded', function(event){
 
 /* všechny objekty který mají atributy v selectoru */
 Array.from(document.querySelectorAll('div.sticker[data-author][data-id]')).forEach(function(elem) {
-  let author = elem.getAttribute('data-author');
-  let id = elem.getAttribute('data-id');
+  let author = elem.dataset.author;
+  let id = elem.dataset.id;
   let value = elem.innerHTML; /* výchozí hodnota lepítka */
 
   /* zápis obsahu */
