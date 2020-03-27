@@ -9,7 +9,6 @@ function draggable(elem){
 		e.preventDefault();
     dx = elem.offsetLeft - e.clientX;
     dy = elem.offsetTop - e.clientY;
-	  elem.style.position = "absolute";
 		move(e);
     document.addEventListener('mousemove', move);
   });
