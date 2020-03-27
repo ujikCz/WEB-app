@@ -15,6 +15,8 @@ Array.from(document.querySelectorAll('div.sticker[data-author][data-id]')).forEa
       ${value}
     </pre>
 	`;
+	
+	draggable(elem);
 });
 
 }); //DOM load
