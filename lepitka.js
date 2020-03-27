@@ -9,7 +9,7 @@ Array.from(document.querySelectorAll('div.sticker[data-author][data-id]')).forEa
   /* zápis obsahu */
   elem.innerHTML = `
 		<div class="container">${author}
-		  <h4><b>autor: ${author}</b></h4>
+		  <h4>autor: ${author}</h4>
 		</div>
     <pre class="pad" contenteditable="true">
       ${value}
