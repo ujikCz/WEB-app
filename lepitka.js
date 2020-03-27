@@ -10,7 +10,6 @@ Array.from(document.querySelectorAll('div.sticker[data-author][data-id]')).forEa
   elem.innerHTML = '' +
       '<div class="container">' +
           '<h4><b>autor: ' + author + '</b></h4>' +
-          '<p>id: ' + id + '</p>' +
         '</div>' +
         '<pre class="pad" contenteditable="true">' +
             value +
