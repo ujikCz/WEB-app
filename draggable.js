@@ -1,32 +1,27 @@
 /* podporu telefonu pridam pozdeji */
 
-function draggable(arg){
+function bound(x, minX, maxX) {
+	if(x<minX) return minX;
+	if(x>maxX) return maxX;
+	return x;
+}
+
+function draggable(elem){
   var dx, dy, xBound, yBound;
-  var elem = arg.element;
-  if(typeof  arg.inside !== 'undefined'){
-    var inside = arg.inside;
-    var insideW = inside.offsetWidth - elem.offsetWidth;
-    var insideH = inside.offsetHeight - elem.offsetHeight;
-  }
+  var inside = elem.parentNode;
+  var insideW = inside.offsetWidth - elem.offsetWidth;
+  var insideH = inside.offsetHeight - elem.offsetHeight;
+	var moving = false;
 
 	var move = function(e) {
-    e = e || window.event;
-    if(typeof arg.inside !== 'undefined'){
     xBound = elem.getBoundingClientRect().left;
     yBound = elem.getBoundingClientRect().top;
-
-    if(xBound > inside.offsetLeft && yBound > inside.offsetTop && xBound < insideW && yBound < insideH){
-      elem.style.left = `${e.clientX+dx}px`;
-      elem.style.top  = `${e.clientY+dy}px`;
-     } else {
-       /* nevím jak doplnit aby se element 'nezamrazil' */
-     }
-   } else { //pokud není inside element specifikován
-     elem.style.left = `${e.clientX+dx}px`;
-     elem.style.top  = `${e.clientY+dy}px`;
+		var xpos = bound(e.clientX+dx, inside.offsetLeft, insideW);
+		var ypos = bound(e.clientY+dy, inside.offsetTop, insideH);
+    elem.style.left = `${xpos}px`;
+    elem.style.top  = `${ypos}px`;
    }
 
-	}
 
   elem.addEventListener('mousedown', function(e) {
 		e.preventDefault();
@@ -34,12 +29,13 @@ function draggable(arg){
     dy = elem.offsetTop - e.clientY;
 		move(e);
     document.addEventListener('mousemove', move);
+		moving = true;
   });
 
 	elem.addEventListener('dragstart', e => e.preventDefault());
 
-	elem.addEventListener('mouseup', function(e) {
-    document.removeEventListener('mousemove', move);
+	document.addEventListener('mouseup', function(e) {
+    if(moving) document.removeEventListener('mousemove', move);
 	});
 }
 /*
