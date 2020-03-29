@@ -1,4 +1,4 @@
-
+/*
 function getID() {
   return new Promise(function(resolve) {
     var xhr = new XMLHttpRequest();
@@ -19,7 +19,7 @@ async function createSticker(contents) {
 }
 
 createSticker("hello? world!");
-
+*/
 window.addEventListener('DOMContentLoaded', function(event){
 
 /* všechny objekty který mají atributy v selectoru */
