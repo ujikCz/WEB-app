@@ -1,68 +1,28 @@
-/* podporu telefonu pridam pozdeji */
-
-function bound(x, minX, maxX) {
-	if(x<minX) return minX;
-	if(x>maxX) return maxX;
-	return x;
-}
-
-function draggable(elem){
-  var dx, dy, xBound, yBound;
-  var inside = elem.parentNode;
-  var insideW = inside.offsetWidth - elem.offsetWidth;
-  var insideH = inside.offsetHeight - elem.offsetHeight;
-	var moving = false;
+function draggable(elem) {
+  var grabX, grabY; // mouse position on elem
+	var maxX, maxY; // mouse bounds on parent
+  var container = elem.parentNode;
+	const clamp = (val, min, max) => (val > max ? max : val < min ? min : val);
 
 	var move = function(e) {
-    xBound = elem.getBoundingClientRect().left;
-    yBound = elem.getBoundingClientRect().top;
-		var xpos = bound(e.clientX+dx, inside.offsetLeft, insideW);
-		var ypos = bound(e.clientY+dy, inside.offsetTop, insideH);
+		var xpos = clamp(e.clientX-grabX, container.offsetLeft, maxX);
+		var ypos = clamp(e.clientY-grabY, container.offsetTop, maxY);
     elem.style.left = `${xpos}px`;
     elem.style.top  = `${ypos}px`;
-   }
-
-
-  elem.addEventListener('mousedown', function(e) {
-		e.preventDefault();
-    dx = elem.offsetLeft - e.clientX;
-    dy = elem.offsetTop - e.clientY;
-		move(e);
-    document.addEventListener('mousemove', move);
-		moving = true;
-  });
+  }
 
 	elem.addEventListener('dragstart', e => e.preventDefault());
 
+  elem.addEventListener('mousedown', function(e) {
+		e.preventDefault();
+    grabX = e.clientX - elem.offsetLeft;
+    grabY = e.clientY - elem.offsetTop;
+		maxX = container.offsetWidth - elem.offsetWidth;
+		maxY = container.offsetHeight - elem.offsetHeight;
+    document.addEventListener('mousemove', move);
+  });
+
 	document.addEventListener('mouseup', function(e) {
-    if(moving) document.removeEventListener('mousemove', move);
+    document.removeEventListener('mousemove', move);
 	});
 }
-/*
-v index.html např.:
-
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width maximum-scale=1 minimum-scale=1" />
-<script src="draggable.js" charset="utf-8"></script>
-
-</head>
-<body>
-  <div class="" id="y" style="border:2px black solid; width:500px; height:300px;">
-  <div style="position: absolute;" id="x">hello world</div>
-  </div>
-
-<script type="text/javascript">
-
-draggable({
-  element: document.getElementById('x'),
-  inside: document.getElementById('y')
-});
-
-</script>
-</body>
-</html>
-
-
-*/
