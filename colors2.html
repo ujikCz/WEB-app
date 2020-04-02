@@ -1,0 +1,21 @@
+<div id="x" style="height:300px; width:300px; border:1px black solid;"></div>
+
+<input type="button" class="colorChanger" data-id="x" data-background="black" data-event="click">
+
+
+<script type="text/javascript">
+window.addEventListener('DOMContentLoaded', function(event){
+	const ccs = document.getElementsByClassName("colorChanger");
+	Array.from(ccs).forEach(function(elem) {
+		if(!elem.dataset) return;
+		if(!elem.dataset.id) return;
+		if(!elem.dataset.event) return;
+		const target = document.getElementById(elem.dataset.id);
+		if(target) elem.addEventListener(elem.dataset.event, function(e) {
+			target.style.backgroundColor = elem.dataset.background || 'inherit';
+			target.style.color = elem.dataset.color || 'inherit';
+		});
+	});
+});
+</script>
+
