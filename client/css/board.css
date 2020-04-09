@@ -1,0 +1,12 @@
+.whiteboard {
+  box-shadow: 0 0 0 .5rem var(--prim-dark) inset;
+}
+.board { display: flex; align-items: stretch; }
+.board.h { flex-direction: row; }
+.board.v { flex-direction: column; }
+.board.main { position: absolute; width: 100%; height: 100%; }
+.sep { background: black; flex: 0 0 0.25em; }
+.sep.h { cursor: ew-resize; }
+.sep.v { cursor: ns-resize; }
+.board > .board:first-child { flex: 0 0 50%; }
+.board > .board:last-child { flex: 1 0 auto; }

@@ -1,0 +1,126 @@
+/* VARIABLES */
+
+:root {
+  --prim-dark: #222;
+  --sec-dark: #444;
+
+  --prim-light: #fff;
+  --sec-light: #D9D9D9;
+
+  --text-light: #fff;
+  --text-dark: #222;
+
+  --rad: .25rem;
+
+  --color-navy: #001F3F;
+  --color-blue: #0074D9;
+  --color-aqua: #7FDBFF;
+  --color-teal: #39CCCC;
+  --color-olive: #3D9970;
+  --color-green: #2ECC40;
+  --color-lime: #01FF70;
+  --color-yellow: #FFDC00;
+  --color-orange: #FF851B;
+  --color-red: #FF4136;
+  --color-maroon: #85144B;
+  --color-fuchsia: #F012BE;
+  --color-purple: #B10DC9;
+  --color-black: #111111;
+  --color-gray: #AAAAAA;
+  --color-silver: #DDDDDD;
+}
+
+/* COLORS */
+
+.color1 { background: #EAB1ED; }
+.color2 { background: #FCB2BC; }
+.color3 { background: #E491B0; }
+.color4 { background: #CEAFA5; }
+.color5 { background: #F2CC87; }
+.color6 { background: #A7F1AC; }
+.color7 { background: #69E2A1; }
+.color8 { background: #7CE2E2; }
+
+/* LAYOUT */
+
+body {
+  margin: 0;
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.whiteboard {
+  grid-column: 1 / span 9;
+  position: relative;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 .5rem var(--prim-dark) inset;
+}
+
+aside {
+  width: 200px;
+  padding: .75rem;
+  margin-right: .75rem;
+}
+
+aside header {
+  display: flex;
+  flex-direction: row;
+}
+
+aside .profile {
+  margin-left: auto;
+  cursor: pointer;
+}
+
+p {
+  max-width: 40em;
+}
+
+/* TYPO */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-size: 1.2vw; /* 20px */
+  line-height: 1.2em;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 100%;
+}
+
+h1, h2, h3 {
+  margin: 0 0 0.5em 0;
+  font-weight: 400;
+  line-height: 1.2em;
+}
+
+h1, .h1 {
+  font-size: 2.75rem; /* 55px */
+  line-height: 1.2em;
+  font-weight: bold;
+}
+
+h2, .h2 {
+  font-size: 2rem; /* 40px */
+  line-height: 1.2em;
+  font-weight: bold;
+}
+
+h3, .h3 {
+  font-size: 1.25rem; /* 25px */
+  line-height: 1.2em;
+}
+
+pre {
+  padding: 1rem;
+  width: max-content;
+  font-family: menlo, inconsolata, monospace;
+  font-size: calc(1em - 2px);
+  background: var(--sec-light);
+  color: var(--prim-dark);
+}
