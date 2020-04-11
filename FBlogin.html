@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <!-- KNIHOVNY -->
+    
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.13.0/firebase-firestore.memory.js"></script>
+<!-- Don't change the format for any other products. -->
+<script src="https://www.gstatic.com/firebasejs/7.13.0/firebase-auth.js"></script>
+<!-- etc. -->
+<script>
+  // Firebase nastaveni 
+  var firebaseConfig = {
+    apiKey: "AIzaSyDK0GdNsgMukZoYHXyFLWGT5hLG0wKxF-8",
+    authDomain: "auth-1da3c.firebaseapp.com",
+    databaseURL: "https://auth-1da3c.firebaseio.com",
+    projectId: "auth-1da3c",
+    storageBucket: "auth-1da3c.appspot.com",
+    messagingSenderId: "298637806473",
+    appId: "1:298637806473:web:3f68e98b614c650e8eaf58",
+    measurementId: "G-708JR99RRD"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics(); //vrati error pokud by se stala chyba
+</script>
+<script>
+function signin()
+{
+    var provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('user_birthday,email'); //filtr
+    firebase.auth().useDeviceLanguage(); //jazyk, defaultni nastaveni
+
+    firebase.auth().signInWithPopup(provider).then(function(result)
+    {
+
+        // Facebook API token
+        var token = result.credential.accessToken;
+
+        document.querySelector("#sign-out").style.display = "block";
+        //tlacitko odhlasit
+
+        var user = result.user;
+
+        console.log(user.email);
+        console.log(user.name);
+        //nelze napsat console.log(user); -> undefined (ochrana nepotřebných dat)
+
+        var userEmail = document.querySelector("#user-email");
+        userEmail.innerHTML = user.email; //email uzivatele
+
+        var userName = document.querySelector("#user-name");
+        userName.innerHTML = user.displayName; //jmeno uzivatele
+
+    }).catch(function(error)
+    {
+        //vsechny mozne errory
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        var email = error.email;
+        var credential = error.credential;
+    });
+
+}
+
+function signout()
+{
+    firebase.auth().signOut().then(function()
+    {
+        // Sign-out successful.
+        console.log(true);
+        //console.log(user.email); tohle je error, uzivatel je jiz odhlasen
+    }).catch(function(error)
+    {
+        // An error happened.
+        console.log('Error, signed out');
+    });
+}
+
+</script>
+
+  </head>
+  <body>
+<!-- button -> spusti redirect auth FB -->
+
+<button onclick="signin()" id="sign-in">Sign in with Facebook</button>
+
+<!-- the place for holding Twitter profile pic-->
+
+<div style="text-align:center;" id="user-name">
+  
+</div>
+
+<div style="text-align:center;" id="user-email">
+
+</h1>
+
+<!-- sign out -->
+
+<button style="display:none;text-align:crnter" onclick="signout()" id="sign-out">SignOut</button>
+
+
+  </body>
+</html>
