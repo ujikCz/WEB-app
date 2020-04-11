@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>View Tutorial</title>
+<style>
+  :root {
+    --bg: #FFF;
+    --bg-side: #DDD;
+    --bg-code: #DDD;
+  }
+  body { min-height: 100vh; background: var(--bg-side); font-family: Helvetica, Arial, sans-serif; }
+  main { display: block; background: var(--bg); width: 70em; padding: 1em; margin: 1em auto; }
+  h2 { border-bottom: 1px solid black; }
+  u { text-decoration: none; font-weight: bold; font-size: big; display: block; }
+  tt, xmp { background: var(--bg-code); font-family: monospace; }
+  xmp { padding: 0.5em; margin-top: -0.1em; }
+  xmp::before { display: block; content: "X"; margin-bottom: -2.5em; opacity: 0; }
+  article { display: flex; align-items: stretch; }
+  .left, .right { flex: 1 1 50%; }
+  .left { margin-right: 0.5em; }
+  .right { margin-left: 0.5em; }
+  .left::before, .right::before { display: block; font-weight: bold; }
+  .right::before { content: "HTML výstup"; }
+</style>
+<main>
+<h1>View Tutorial</h1>
+
+<p>View část MVC architektury se skládá z <b>bloků</b>. Blok je HTML šablona obohacená o Javascript a CSS, které se načtou do hlavičky. Bloky se umísťují do podadresáře blocks.
+
+<h2>Hello world</h2>
+<p>Blok obsahuje části <tt>html</tt>, <tt>style</tt> a <tt>script</tt>, styly a skripty se načtou pouze jednou do hlavičky. Toto dělení není povinné, bez něj se celá část považuje za <tt>html</tt>.
+<article>
+<div class="left">
+<u>blocks/bi.php</u>
+<xmp>
+<html>
+  <b><i onmouseover="hover(this)">Hello</i></b>
+</html>
+
+<style>
+  i { color: red; }
+</style>
+
+<script>
+  function hover(elem) {
+    elem.style.color = "blue";
+  }
+</script>
+</xmp>
+<u>použití</u>
+<xmp>
+I say <?=block::bi()?>!
+</xmp>
+</div>
+
+<div class="right">
+<xmp>
+<html>
+  <head>
+    <style>i { color: red; }</style>
+    <script>
+      function hover(elem) {
+        elem.style.color = "blue";
+      }
+    </script>
+  </head>
+  <body>
+    I say <b><i>Hello</i></b>!
+  </body>
+</html>
+</xmp>
+</div>
+</article>
+
+<h2>PHP proměnné</h2>
+<p>PHP proměnné bloků mají lokální kontext, nepřepisují proměnné jiných bloků. Pro import globálních proměnných lze v bloku zavolat <tt>extract($GLOBALS)</tt>.
+<p>Bloku lze předat parametr v podobě pole. Toto pole je viditelné v bloku jako lokální proměnná <tt>$args</tt>.
+<article>
+<div class="left">
+<u>blocks/bip.php</u>
+<xmp>
+<b><i><?=$args[0]?></i></b>
+</xmp>
+<u>použití</u>
+<xmp>
+I say <?=block::bip(["Hello"])?>, you say <?=block::bip(["Bye"])?>.
+</xmp>
+</div>
+
+<div class="right">
+<xmp>
+I say <b><i>Hello</i></b>, you say <b><i>Bye</i></b>.
+</xmp>
+</div>
+</article>
+
+<h2>Vnořování bloků</h2>
+<p>V blocích je možné volat libovolný php kód, včetně kódu bloků.
+<article>
+<div class="left">
+<u>blocks/bipList.php</u>
+<xmp>
+<html>
+  <ul>
+  <?foreach($args as $arg):?>
+    <li><?=block::bip([$arg])?>
+  <?endforeach?>
+  </ul>
+</html>
+
+<style>
+  i { color: red; }
+</style>
+</xmp>
+<u>použití</u>
+<xmp>
+<?=block::bipList(["one","two","three"])?>
+</xmp>
+</div>
+
+<div class="right">
+<xmp>
+<html>
+  <head>
+    <style>
+      i { color: red; }
+    </style>
+  </head>
+
+<ul>
+  <li><b><i>one</i></b>
+  <li><b><i>two</i></b>
+  <li><b><i>three</i></b>
+</ul>
+</html>
+</xmp>
+</div>
+</article>
+
+<h2>Závislosti</h2>
+<p>Blok může vynutit načtení stylů a skriptů jiného bloku voláním <tt>block::require("block")</tt> i bez jeho zobrazení.
+<article>
+<div class="left">
+<u>blocks/red.php</u>
+<xmp>
+<?block::require("bipList")?>
+<i>Red cursive</i>
+</xmp>
+<u>použití</u>
+<xmp>
+<?=block::red()?>
+</xmp>
+</div>
+
+<div class="right">
+<xmp>
+<html>
+  <head>
+    <style>
+      i { color: red; }
+    </style>
+  </head>
+
+  <i>Red cursive</i>
+</html>
+</xmp>
+</div>
+</article>
+
+<h2>Sekce</h2>
+<p>Sekce slouží jako akumulátor bloků. Při každém volání bloku se kód označený v sekci nenačte na výstup, ale do proměnné, kterou je pak možné controllerem dále zpracovat. Části <tt>style</tt> a <tt>script</tt> jsou syntaktický cukr pro sekce <tt>css</tt> a <tt>js</tt>.
+<article>
+<div class="left">
+<u>blocks/i.php</u>
+<xmp>
+<i><?=$args[0]?></i>
+
+<?section::begin("css")?>
+  i { color: red; }
+<?section::end()?>
+</xmp>
+<u>použití</u>
+<xmp>
+Author: <?=block::i(["John Doe"])?>
+</xmp>
+</div>
+
+<div class="right">
+<xmp>
+<html>
+  <head>
+    <style>
+      i { color: red; }
+    </style>
+  </head>
+
+  Author: <i>John Doe</i>
+</html>
+</xmp>
+</div>
+</article>
+
+<h2>HTML kód bloku načtený pouze jednou</h2>
+<p>Je možné založit uživatelskou sekci, která se pak dá zobrazit příkazem <tt>section::load()</tt>.
+<article>
+<div class="left">
+<u>blocks/greetings.php</u>
+<xmp>
+<span class="<?=$args["class"]?>"><?=$args["data"]?></span>
+<?section::begin("info")?>
+  <?=$args["class"]?>
+<?section::end()?>
+</xmp>
+<u>použití</u>
+<xmp>
+<?=block::greetings(["class"=>"french","data"=>"Bonjour"])?>
+<?=block::greetings(["class"=>"czech","data"=>"Ahoj"])?>
+<?=section::load("info")?>
+</xmp>
+</div>
+
+<div class="right">
+<xmp>
+<span class="french">Bonjour</span>
+<span class="czech">Ahoj</span>
+french
+</xmp>
+</div>
+</article>
+
+<h2>PHP kód bloku načtený pouze jednou</h2>
+<p>Třída blocks udržuje asociativní pole <tt>$parsed</tt> o načtených blocích, které lze otestovat metodou <tt>isnew()</tt>.
+<article>
+<div class="left">
+<u>blocks/greetings2.php</u>
+<xmp>
+<?if(block::isnew("greetings2")) $GLOBALS["info"] = $args["class"]?>
+<span class="<?=$args["class"]?>"><?=$args["data"]?></span>
+  <?=$args["class"]?>
+<?section::end()?>
+</xmp>
+<u>použití</u>
+<xmp>
+<?=block::greetings2(["class"=>"french","data"=>"Bonjour"])?>
+<?=block::greetings2(["class"=>"czech","data"=>"Ahoj"])?>
+<?=$info?>
+</xmp>
+</div>
+
+<div class="right">
+<xmp>
+<span class="french">Bonjour</span>
+<span class="czech">Ahoj</span>
+french
+</xmp>
+</div>
+</article>
+</main>

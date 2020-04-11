@@ -88,9 +88,9 @@ else if(GET("get")=="courses" and $schoolID=GET("school")) {
 */
 else if(GET("get")=="stickers" and $courseID=GET("course")) {
 	$sql = $MODEL->buildQuery("
-		SELECT s.rowid sid,s.*,p.rowid pid,c.color FROM stickers s
+		SELECT s.rowid sid,s.*,p.rowid pid,e.color FROM stickers s
 		JOIN people p ON p.rowid=s.peopleID
-		JOIN colors c ON c.courseID=s.courseID AND c.peopleID=p.rowid
+		JOIN enroll e ON e.courseID=s.courseID AND e.peopleID=p.rowid
 		WHERE s.courseID=%d", $courseID);
 	$data = $MODEL->select($sql,":sid;:pid;:x;:y;:color;:contents\n");
 	foreach($data as $row) print($row);
@@ -104,9 +104,9 @@ else if(GET("get")=="stickers" and $courseID=GET("course")) {
 */
 else if(GET("get")=="stickers,authors" and $courseID=GET("course")) {
 	$sql = $MODEL->buildQuery("
-		SELECT s.rowid sid,s.*,p.rowid pid,p.*,c.color FROM stickers s
+		SELECT s.rowid sid,s.*,p.rowid pid,p.*,e.color FROM stickers s
 		JOIN people p ON p.rowid=s.peopleID
-		JOIN colors c ON c.courseID=s.courseID AND c.peopleID=p.rowid
+		JOIN enroll e ON e.courseID=s.courseID AND e.peopleID=p.rowid
 		WHERE s.courseID=%d", $courseID);
 	$data = $MODEL->select($sql,":sid;:pid;:name;:contact;:x;:y;:color;:contents\n");
 	foreach($data as $row) print($row);
@@ -133,10 +133,9 @@ else if(GET("get")=="stickers" and $peopleID=GET("person")) {
 else if(GET("get")=="people" and $courseID=GET("course")) {
 	$sql = $MODEL->buildQuery("
 		SELECT p.rowid,p.name,p.contact,
-      CASE WHEN t.schoolID IS NULL THEN 's' ELSE 't' END role,
-      c.color FROM colors c
-		JOIN people p ON p.rowid=c.peopleID AND c.courseID=%d
-    LEFT JOIN teachers t ON t.peopleID=p.rowid AND t.courseID=%d
+      CASE WHEN e.role=1 THEN 's' ELSE 't' END role,
+      e.color FROM enroll e
+		JOIN people p ON p.rowid=e.peopleID AND e.courseID=%d
 	", $courseID, $courseID);
 	$data = $MODEL->select($sql,":rowid;:name;:contact;:role;:color\n");
 	foreach($data as $row) print($row);
@@ -231,7 +230,7 @@ else if(GET("set")=="color" and $courseID=GET("course")) {
 */
 else if(GET("set")=="course" and $courseID=GET("course")) {
 	if(!SESS("ID")) print(UNAUTHORIZED);
-  else if(!$MODEL->queryValue("SELECT 1 FROM teachers WHERE courseID=%d AND peopleID=%d", $courseID, SESS("ID"))) print(UNAUTHORIZED);
+  else if(2!=$MODEL->queryValue("SELECT role FROM enroll WHERE courseID=%d AND peopleID=%d", $courseID, SESS("ID"))) print(UNAUTHORIZED);
 	else {
 	  $panels=POST("panels"); $name=POST("name");
 		if($name) $MODEL->execQuery("UPDATE courses SET name=%s WHERE rowid=%d", $name, $courseID);
@@ -247,11 +246,8 @@ else if(GET("set")=="course" and $courseID=GET("course")) {
 	RESPONSE: int (-1 if unauthorized, 1 if OK)
 */
 else if(GET("del")=="sticker" and $stickerID=GET("sticker")) {
-	$valid = true;
-	if(!SESS("ID")) $valid = false;
-	$check = $MODEL->queryValue("SELECT rowid FROM stickers WHERE rowid=%d AND peopleID=%d", $stickerID, SESS("ID"));
-	if(!$check) $valid = false;
-	if(!$valid) print(UNAUTHORIZED);
+	if(!SESS("ID")) print(UNAUTHORIZED);
+	else if(!$MODEL->queryValue("SELECT rowid FROM stickers WHERE rowid=%d AND peopleID=%d", $stickerID, SESS("ID"))) print(UNAUTHORIZED);
 	else {
 		$MODEL->execQuery("DELETE FROM stickers WHERE rowid=%d", $stickerID);
 		print(1);

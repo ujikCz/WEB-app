@@ -1,9 +1,56 @@
+<? block::require("contextMenu")?>
+<html>
+<div class="whiteboard">
+<div class="board main"></div>
+<?$stickers = callAPI("get=stickers,authors&course=1");
+	foreach(explode("\n", $stickers) as $line) {
+		$data = explode(";", $line);
+		if(count($data)<=1) continue;
+		echo block::sticker(array(
+			"id" => $data[0],
+      "pid" => $data[1],
+			"name" => $data[2],
+			"contact" => $data[3],
+			"x" => $data[4],
+			"y" => $data[5],
+			"color" => $data[6],
+			"content" => $data[7],
+		));
+	}?>
+</div>
+</html>
+
+<style>
+.whiteboard {
+  box-shadow: 0 0 0 .5rem var(--prim-dark) inset;
+}
+.board { display: flex; align-items: stretch; }
+.board.h { flex-direction: row; }
+.board.v { flex-direction: column; }
+.board.main { position: absolute; width: 100%; height: 100%; }
+.sep { background: black; flex: 0 0 0.25em; }
+.sep.h { cursor: ew-resize; }
+.sep.v { cursor: ns-resize; }
+.board > .board:first-child { flex: 0 0 50%; }
+.board > .board:last-child { flex: 1 0 auto; }
+</style>
+
+<script>
 var separators = new function() {
   var mainboard;
   var sepData = {};
 
   document.addEventListener("DOMContentLoaded", function() {
     mainboard = document.getElementsByClassName("main")[0];
+    // context menu
+    contextMenu.add("board", {
+      "Rozdělit horizontálně": separators.splitAndSaveH,
+      "Rozdělit vertikálně": separators.splitAndSaveV,
+    });
+
+    contextMenu.add("sep", {
+      "Odstranit příčku": separators.removeSplit,
+    });
   });
 
   window.addEventListener("load", loadSepData);
@@ -86,3 +133,4 @@ var separators = new function() {
     saveSepData();
   }
 }
+</script>
