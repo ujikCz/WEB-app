@@ -33,16 +33,44 @@
 </script>
 <script>
 
+var userEmail, userName,
+provider;
+
+window.onload = function init(){
+userEmail = document.querySelector("#user-email");
+userName = document.querySelector("#user-name");
+}
+
+
+
   /*
    * FACEBOOK LOGIN
    */
 
 function signinFB()
 {
-    var provider = new firebase.auth.FacebookAuthProvider();
-    provider.addScope('user_birthday,email'); //filtr
+    provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('email'); //filtr
     firebase.auth().useDeviceLanguage(); //jazyk, defaultni nastaveni
+    initLogin();
+}
 
+  /*
+   * GOOGLE LOGIN
+   */
+
+function signinGoogle()
+{
+    provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().useDeviceLanguage(); //jazyk, defaultni nastaveni
+    initLogin();
+}
+
+  /*
+   * INIT LOGIN
+   */
+
+  function initLogin(){
     firebase.auth().signInWithPopup(provider).then(function(result)
     {
 
@@ -54,14 +82,8 @@ function signinFB()
 
         var user = result.user;
 
-        console.log(user.email);
-        console.log(user.name);
-        //nelze napsat console.log(user); -> undefined (ochrana nepotřebných dat)
-
-        var userEmail = document.querySelector("#user-email");
         userEmail.innerHTML = user.email; //email uzivatele
 
-        var userName = document.querySelector("#user-name");
         userName.innerHTML = user.displayName; //jmeno uzivatele
 
     }).catch(function(error)
@@ -72,47 +94,8 @@ function signinFB()
         var email = error.email;
         var credential = error.credential;
     });
+  }
 
-}
-
-  /*
-   * /FACEBOOK LOGIN
-   */
-
-  /*
-   * GOOGLE LOGIN
-   */
-
-function signinGoogle()
-{
-    var provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().useDeviceLanguage(); //jazyk, defaultni nastaveni
-
-    firebase.auth().signInWithPopup(provider).then(function(result)
-    {
-        var user = result.user;
-
-        document.querySelector("#sign-out").style.display = "block";
-
-        var userEmail = document.querySelector("#user-email");
-        userEmail.innerHTML = user.email; //email uzivatele
-
-        var userName = document.querySelector("#user-name");
-        userName.innerHTML = user.displayName; //jmeno uzivatele
-
-    }).catch(function(error)
-    {
-        //vsechny mozne errory
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        var email = error.email;
-        var credential = error.credential;
-    });
-}
-
-  /*
-   * /GOOGLE LOGIN
-   */
 
   /*
    * LOGOUT
@@ -124,6 +107,9 @@ function signout()
     {
         // Sign-out successful.
         console.log('signed out');
+        userName.innerHTML = userEmail.innerHTML = '';
+        document.querySelector("#sign-out").style.display = "none";
+
         //console.log(user.email); tohle je error, uzivatel je jiz odhlasen
     }).catch(function(error)
     {
@@ -133,9 +119,6 @@ function signout()
 }
 
 
-  /*
-   * /LOGOUT
-   */
 </script>
 
   </head>
@@ -161,4 +144,3 @@ function signout()
 
   </body>
 </html>
-
