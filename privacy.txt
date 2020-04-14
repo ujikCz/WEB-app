@@ -1,0 +1,5 @@
+﻿LMS ŠkolaZdola - Zásady ochrany osobních údajů
+
+LMS ŠkolaZdola, z.s. IČO 08869807 umožňuje přihlášeným uživatelům správu jimi vytvořeného obsahu, který je dostupný každému návštěvníkovi stránek. LMS z důvodu netikety a ochranou před nevyžádaným obsahem podmiňuje založení účtu poskytnutím ověřitelného kontaktaktního údaje v podobě e-mailu či telefonního čísla, pomocí kterých ŠkolaZdola může komunikovat s jejich adresáty. Tyto údaje nejsou poskytovány třetím stranám, účastník kurzu může zveřejnit své kontaktní informace formou příspěvku dle svého uvážení. Nepravdivé informace budou po nahlášení smazány.
+
+Kontaktní údaje jsou uloženy do databáze po zadání z webového formuláře přes TLS kanál či využitím externí přihlašovací služby. Uživatele kdykoliv může požádat o odstranění svého profilu zprávou přes některý z uvedených kontaktů, což správci LMS učiní co nejdříve.
