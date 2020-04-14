@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <!-- KNIHOVNY -->
+    
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.13.0/firebase-firestore.memory.js"></script>
+<!-- Don't change the format for any other products. -->
+<script src="https://www.gstatic.com/firebasejs/7.13.0/firebase-auth.js"></script>
+
+<script>
+  // Firebase nastaveni 
+  var firebaseConfig = {
+    apiKey: "AIzaSyDK0GdNsgMukZoYHXyFLWGT5hLG0wKxF-8",
+    authDomain: "auth-1da3c.firebaseapp.com",
+    databaseURL: "https://auth-1da3c.firebaseio.com",
+    projectId: "auth-1da3c",
+    storageBucket: "auth-1da3c.appspot.com",
+    messagingSenderId: "298637806473",
+    appId: "1:298637806473:web:3f68e98b614c650e8eaf58",
+    measurementId: "G-708JR99RRD"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics(); //vrati error pokud by se stala chyba pri initializeApp funkci
+</script>
+<script>
+
+var userEmail, userName,
+provider;
+
+window.onload = function init(){
+userEmail = document.querySelector("#user-email");
+userName = document.querySelector("#user-name");
+}
+
+
+
+  /*
+   * FACEBOOK LOGIN
+   */
+
+function signinFB()
+{
+    provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('email'); //filtr
+    firebase.auth().useDeviceLanguage(); //jazyk, defaultni nastaveni
+    initLogin();
+}
+
+  /*
+   * GOOGLE LOGIN
+   */
+
+function signinGoogle()
+{
+    provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().useDeviceLanguage(); //jazyk, defaultni nastaveni
+    initLogin();
+}
+
+  /*
+   * INIT LOGIN
+   */
+
+  function initLogin(){
+    firebase.auth().signInWithPopup(provider).then(function(result)
+    {
+
+        // Facebook API token
+        var token = result.credential.accessToken;
+
+        document.querySelector("#sign-out").style.display = "block";
+        //tlacitko odhlasit
+
+        var user = result.user;
+
+        userEmail.innerHTML = user.email; //email uzivatele
+
+        userName.innerHTML = user.displayName; //jmeno uzivatele
+
+    }).catch(function(error)
+    {
+        //vsechny mozne errory
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        var email = error.email;
+        var credential = error.credential;
+    });
+  }
+
+
+  /*
+   * LOGOUT
+   */
+
+function signout()
+{
+    firebase.auth().signOut().then(function()
+    {
+        // Sign-out successful.
+        console.log('signed out');
+        userName.innerHTML = userEmail.innerHTML = '';
+        document.querySelector("#sign-out").style.display = "none";
+
+        //console.log(user.email); tohle je error, uzivatel je jiz odhlasen
+    }).catch(function(error)
+    {
+        // error log
+        console.log('Error: ' + error);
+    });
+}
+
+
+</script>
+
+  </head>
+  <body>
+<!-- button for invoking redirect auth-->
+
+<button onclick="signinFB()" id="sign-in">Sign in with Facebook</button>
+<button onclick="signinGoogle()" id="sign-in">Sign in with Google</button>
+
+
+<div style="text-align:center;" id="user-name">
+  
+</div>
+
+
+<div style="text-align:center;" id="user-email">
+
+</div>
+
+
+<button style="display:none;text-align:crnter" onclick="signout()" id="sign-out">SignOut</button>
+
+
+  </body>
+</html>
